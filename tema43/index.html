@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<title>Estrategias para la gestión energética</title>
+<style>
+  :root {
+    --plum: #572750;
+    --plum-dark: #310b2d;
+    --border: #d8c4d5;
+    --paper: #ffffff;
+    --soft: #fbf7fa;
+    --muted: #765f73;
+    --shadow: 0 12px 28px rgba(62, 23, 58, .10);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 100%; min-height: 100%; }
+  body {
+    padding: clamp(14px, 3vw, 38px);
+    background: var(--paper);
+    color: var(--plum-dark);
+    font-family: "Poppins", "Aptos", "Segoe UI", Arial, sans-serif;
+  }
+  .wrap { width: min(100%, 1500px); margin: 0 auto; }
+  .topline {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin: 0 0 clamp(26px, 4vw, 48px);
+  }
+  .instruction {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    max-width: 100%;
+    padding: 9px 15px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--plum);
+    background: var(--soft);
+    font-size: clamp(11px, 1.1vw, 13px);
+    line-height: 1.4;
+    text-align: right;
+  }
+  .instruction svg { width: 17px; height: 17px; flex: 0 0 auto; }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(14px, 2vw, 30px);
+    align-items: stretch;
+  }
+  .card {
+    position: relative;
+    min-width: 0;
+    min-height: clamp(310px, 29vw, 440px);
+    perspective: 1200px;
+    outline: none;
+  }
+  .card-inner {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transition: transform .72s cubic-bezier(.2,.75,.2,1);
+  }
+  .card.is-flipped .card-inner { transform: rotateY(180deg); }
+  .card-face {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(28px, 3vw, 48px) clamp(18px, 2vw, 34px) clamp(22px, 2.5vw, 36px);
+    border: 3px solid var(--border);
+    border-top: 15px solid var(--plum);
+    border-radius: 16px 16px 22px 22px;
+    background: var(--paper);
+    text-align: center;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    box-shadow: 0 2px 0 rgba(87,39,80,.02);
+  }
+  .front {
+    cursor: pointer;
+    transition: box-shadow .25s, border-color .25s, background .25s;
+  }
+  .front:hover, .card:focus-visible .front {
+    box-shadow: var(--shadow);
+    border-color: #c8a9c3;
+    background: #fffdfd;
+  }
+  .icon-medallion {
+    position: absolute;
+    top: -57px;
+    left: 50%;
+    width: clamp(68px, 6.2vw, 88px);
+    height: clamp(68px, 6.2vw, 88px);
+    transform: translateX(-50%);
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--plum);
+    color: #fff;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 1px rgba(87,39,80,.08);
+  }
+  .icon-medallion svg { width: 34px; height: 34px; stroke: currentColor; }
+  h2 {
+    margin: 14px 0 16px;
+    color: var(--plum-dark);
+    font-size: clamp(18px, 1.85vw, 27px);
+    line-height: 1.14;
+    font-weight: 750;
+    letter-spacing: -.035em;
+  }
+  .front h2 { margin-top: 36px; }
+  .front-prompt {
+    margin-top: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--plum);
+    font-size: clamp(12px, 1.15vw, 14px);
+    font-weight: 650;
+    opacity: .9;
+  }
+  .front-prompt svg { width: 16px; height: 16px; }
+  .back {
+    transform: rotateY(180deg);
+    background: var(--soft);
+    cursor: pointer;
+  }
+  .back h2 { margin-top: 20px; margin-bottom: 18px; }
+  .description {
+    margin: 0;
+    max-width: 48ch;
+    color: #2e102b;
+    font-size: clamp(15px, 1.55vw, 22px);
+    line-height: 1.55;
+    font-weight: 400;
+  }
+  .return {
+    margin-top: auto;
+    padding-top: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--plum);
+    font-size: 12px;
+    font-weight: 650;
+  }
+  .return svg { width: 15px; height: 15px; }
+  .card.is-flipped .icon-medallion { display: none; }
+  .card:focus-visible .card-face { outline: 3px solid rgba(87,39,80,.28); outline-offset: 4px; }
+  @media (max-width: 850px) {
+    .cards { grid-template-columns: 1fr; gap: 58px; }
+    .card { min-height: 310px; }
+    .description { font-size: clamp(16px, 2.3vw, 20px); }
+    .topline { margin-bottom: 30px; }
+  }
+  @media (max-width: 420px) {
+    body { padding: 14px 12px 24px; }
+    .card { min-height: 330px; }
+    .card-face { padding-left: 18px; padding-right: 18px; }
+    h2 { font-size: 20px; }
+    .description { font-size: 16px; }
+    .instruction { border-radius: 12px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card-inner { transition: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="topline">
+    <div class="instruction" aria-label="Instrucción">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 17v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2"/>
+      </svg>
+      <span>Seleccione cada tarjeta para consultar la estrategia. Selecciónela nuevamente para regresar.</span>
+    </div>
+  </div>
+
+  <section class="cards" aria-label="Estrategias de gestión energética">
+    <!-- Tarjeta 1 -->
+    <article class="card" tabindex="0" role="button" aria-pressed="false" aria-label="Almacenamiento energético. Seleccionar para consultar la estrategia.">
+      <div class="card-inner">
+        <div class="card-face front">
+          <div class="icon-medallion" aria-hidden="true">
+            <svg viewBox="0 0 40 40" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="11" width="30" height="23" rx="2.5"/><path d="M14 11V7.5A2.5 2.5 0 0 1 16.5 5h7A2.5 2.5 0 0 1 26 7.5V11M5 17h30M14 23h6m-3-3v6m9-3h3"/>
+            </svg>
+          </div>
+          <h2>Almacenamiento energético</h2>
+          <span class="front-prompt">Consultar estrategia
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+          </span>
+        </div>
+        <div class="card-face back">
+          <h2>Almacenamiento energético</h2>
+          <p class="description">Emplear almacenamiento energético que permita usar la energía renovable cuando es generada y suministrarla cuando la demanda lo requiera, reduciendo la necesidad de energía de respaldo y pérdidas por cambio de estado.</p>
+          <span class="return">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5m6 6-6-6 6-6"/></svg>
+            Volver a la tarjeta
+          </span>
+        </div>
+      </div>
+    </article>
+
+    <!-- Tarjeta 2 -->
+    <article class="card" tabindex="0" role="button" aria-pressed="false" aria-label="Control inteligente de cargas. Seleccionar para consultar la estrategia.">
+      <div class="card-inner">
+        <div class="card-face front">
+          <div class="icon-medallion" aria-hidden="true">
+            <svg viewBox="0 0 40 40" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 19V8.5a2.5 2.5 0 0 1 5 0V17m0-5a2.5 2.5 0 0 1 5 0v7m0-4a2.5 2.5 0 0 1 5 0v8.5c0 6-3.8 10-9.5 10h-1.2c-3.5 0-5.4-1.3-7.3-4l-4.5-6.2a2.4 2.4 0 0 1 3.8-2.9L13 25"/>
+              <rect x="22" y="25" width="13" height="10" rx="2"/><path d="M25 25v-2a3.5 3.5 0 0 1 7 0v2m-3.5 3v3"/>
+            </svg>
+          </div>
+          <h2>Control inteligente de cargas</h2>
+          <span class="front-prompt">Consultar estrategia
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+          </span>
+        </div>
+        <div class="card-face back">
+          <h2>Control inteligente de cargas</h2>
+          <p class="description">Integrar control inteligente de cargas, que ajusten su operación (demanda desplazable) para sincronizarse con momentos de mayor generación renovable (Parvizi et al., 2025).</p>
+          <span class="return">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5m6 6-6-6 6-6"/></svg>
+            Volver a la tarjeta
+          </span>
+        </div>
+      </div>
+    </article>
+
+    <!-- Tarjeta 3 -->
+    <article class="card" tabindex="0" role="button" aria-pressed="false" aria-label="Mantenimiento preventivo y predictivo. Seleccionar para consultar la estrategia.">
+      <div class="card-inner">
+        <div class="card-face front">
+          <div class="icon-medallion" aria-hidden="true">
+            <svg viewBox="0 0 40 40" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 5a8 8 0 0 0 8 11v17a3 3 0 0 1-6 0V16A8 8 0 0 0 13 5l2 7 4 1 2-4-2-7"/>
+              <path d="M29 16v-3m0 20v-3m9-7h-3m-12 0h-3m15-6-2 2m-10 10-2 2m14 0-2-2m-10-10-2-2"/>
+              <circle cx="29" cy="23" r="7"/><circle cx="29" cy="23" r="2.5"/>
+            </svg>
+          </div>
+          <h2>Mantenimiento preventivo y predictivo</h2>
+          <span class="front-prompt">Consultar estrategia
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+          </span>
+        </div>
+        <div class="card-face back">
+          <h2>Mantenimiento preventivo y predictivo</h2>
+          <p class="description">Realizar mantenimiento preventivo y predictivo en equipos clave (inversores, transformadores, líneas) para mantener la eficiencia nominal y evitar degradación que aumente pérdidas.</p>
+          <span class="return">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5m6 6-6-6 6-6"/></svg>
+            Volver a la tarjeta
+          </span>
+        </div>
+      </div>
+    </article>
+  </section>
+</main>
+<script>
+(() => {
+  const cards = document.querySelectorAll('.card');
+  function toggle(card) {
+    const flipped = card.classList.toggle('is-flipped');
+    card.setAttribute('aria-pressed', String(flipped));
+  }
+  cards.forEach(card => {
+    card.addEventListener('click', () => toggle(card));
+    card.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        toggle(card);
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
